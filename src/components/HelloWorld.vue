@@ -4,7 +4,7 @@
       <input type="text" v-model="q">
       <button>search</button>
     </form>
-    <p>{{q}}</p>
+    <p class="bg-red-700">{{q}}</p>
     <section>
       <div class="gif-container">
           <img class="gif" v-for="result in results" :key="result.id" :src="result.images.original.url" alt="">  
