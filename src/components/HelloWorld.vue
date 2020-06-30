@@ -1,10 +1,10 @@
 <template>
-  <div class="hello">
+  <div class="hello bg-yellow-800">
     <form action="" @submit.prevent="search">
       <input type="text" v-model="q">
       <button>search</button>
     </form>
-    <p class="bg-red-700">{{q}}</p>
+    <p class="bg-red-300">{{q}}</p>
     <section>
       <div class="gif-container">
           <img class="gif" v-for="result in results" :key="result.id" :src="result.images.original.url" alt="">  
