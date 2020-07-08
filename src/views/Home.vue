@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <SearchForm msg="Welcome to Your Vue.js App"/>
+    <SearchForm />
   </div>
 </template>
 

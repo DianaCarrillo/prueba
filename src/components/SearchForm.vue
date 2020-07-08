@@ -1,19 +1,20 @@
 <template>
 <div>
-    <div class="flex w-full justify-center p-8 bg-gray-400 fixed z-20">
+     <div class="flex w-full justify-center p-8 bg-gray-400 fixed z-20">
           <p class="text-4xl mr-4">Search <span class="font-bold">{{q}}</span> gifs</p>
       <form action=""   @submit.prevent="search">
-       <input type="text" v-model="q" class=" mr-4 p-4" placeholder="Search gifs">
-       <button class="mr-4 bg-gray-100 p-4 rounded-lg hover:bg-gray-200 shadow-md focus:shadow-none" >Search</button>
+        <input type="text" v-model="q" class=" mr-4 p-4" placeholder="Search gifs">
+        <Btn name="Search" :disabled="disabledSearchBtn" />
        </form>
-      <button class="mr-4 bg-gray-100 p-4 rounded-lg hover:bg-gray-200 shadow-md focus:shadow-none" @click="search" :disabled="!q" >Load more</button> 
+       <Btn name="Load more" :method="search" :disabled="disabledMoreBtn"/>
       </div>
-    <Gifs :results="results" :query="q"/>
+    <Gifs :results="results" :query="q"/> 
 </div>
 
 </template>
 
 <script>
+import Btn from "./Btn.vue";
 import Gifs from "./Gifs.vue";
 import axios from "axios";
 const apiKey = "7oqbWiAr4RXO48oFiX2amhSTciHjnjY3";
@@ -24,16 +25,26 @@ export default {
       q: "",
       results: null,
       limit: 0,
-      disabledMoreBtn: false
+      disabledMoreBtn: false,
+      disabledSearchBtn: false
     };
   },
   components: {
-    Gifs
+    Gifs,
+    Btn
   },
   watch: {
     q(old, newVal) {
       if (old !== newVal) {
         this.limit = 0;
+        this.disabledSearchBtn = false;
+        this.disabledMoreBtn = false;
+      }
+    },
+    limit() {
+      if (this.limit >= 100) {
+        this.disabledSearchBtn = true;
+        this.disabledMoreBtn = true;
       }
     }
   },
