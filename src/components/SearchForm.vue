@@ -1,12 +1,15 @@
 <template>
 <div>
-     <div class="flex w-full justify-center p-8 bg-gray-400 fixed z-20">
-          <p class="text-4xl mr-4">Search <span class="font-bold">{{q}}</span> gifs</p>
-      <form action=""   @submit.prevent="search">
-        <input type="text" v-model="q" class=" mr-4 p-4" placeholder="Search gifs">
-        <Btn name="Search" :disabled="disabledSearchBtn" />
+     <div class="search-container flex w-full justify-center lg:p-8 p-4 bg-gray-400 fixed z-20">
+          <p class="lg:text-4xl text-3xl mr-4 pb-2 ">Search <span class="font-bold">{{q}}</span> gifs</p>
+      <section class="flex">
+        <form action="" class="flex"  @submit.prevent="search">
+        <input type="text" v-model="q" class=" outline-none lg:w-full w-3/4 lg:mr-4 mr-2 p-2" placeholder="Search gifs">
+        <Btn name="Search" :disabled="disabledSearch" class="mr-2" />
        </form>
-       <Btn name="Load more" :method="search" :disabled="disabledMoreBtn"/>
+       <Btn name="Load more" :method="search" :disabled="disabledLoad"/>
+      </section>
+      
       </div>
     <Gifs :results="results" :query="q"/> 
 </div>
@@ -33,18 +36,22 @@ export default {
     Gifs,
     Btn
   },
+  computed: {
+    disabledSearch() {
+      if (!this.q) {
+        return (this.disabledSearchBtn = true);
+      }
+    },
+    disabledLoad() {
+      if (this.limit >= 100 || !this.q) {
+        return (this.disabledMoreBtn = true);
+      }
+    }
+  },
   watch: {
     q(old, newVal) {
       if (old !== newVal) {
         this.limit = 0;
-        this.disabledSearchBtn = false;
-        this.disabledMoreBtn = false;
-      }
-    },
-    limit() {
-      if (this.limit >= 100) {
-        this.disabledSearchBtn = true;
-        this.disabledMoreBtn = true;
       }
     }
   },
@@ -73,8 +80,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-button:focus,
-input:focus {
-  outline: none;
+@media screen and (max-width: 480px) {
+  .search-container {
+    flex-direction: column;
+  }
 }
 </style>

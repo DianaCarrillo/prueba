@@ -1,6 +1,6 @@
 <template>
     <transition name="modal">
-        <div class="modal-mask cursor-pointer" @click="$emit('close', false)">
+        <div class="modal-mask cursor-pointer justify-center mt-16" @click="$emit('close', false)">
           <div class="modal-wrapper">
             <div class="modal-container">
                <slot></slot>
@@ -48,5 +48,13 @@ export default {
   background-color: #ffffff;
   border-radius: 0.3em;
   transition: all 0.3s ease;
+}
+@media screen and (max-width: 480px) {
+  .modal-container {
+    width: 300px;
+    height: 300px;
+    padding: 5px 5px;
+    background-color: #ffffff;
+  }
 }
 </style>

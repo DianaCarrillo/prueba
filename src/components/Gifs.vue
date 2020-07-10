@@ -42,6 +42,27 @@ export default {
   /* overflow: hidden; */
   display: grid;
 
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  /* grid-template-columns: 1fr 1fr 1fr 1fr 1fr; */
+}
+
+@media screen and (min-width: 480px) {
+  .gif-container {
+    /* border: 1px solid purple; */
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+@media screen and (min-width: 678px) {
+  .gif-container {
+    /* border: 1px solid purple; */
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media screen and (min-width: 1024px) {
+  .gif-container {
+    /* display: flex; */
+    /* overflow: hidden; */
+    /* display: grid; */
+    grid-template-columns: 1fr 1fr 1fr;
+  }
 }
 </style>
