@@ -1,12 +1,20 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
+import App from '../App.vue'
+
 
 Vue.use(VueRouter)
 
   const routes = [
   {
     path: '/',
+    redirect: '/search' ,
+    name:'App',
+    component: App
+  },
+  {
+    path: '/search/:id?',
     name: 'Home',
     component: Home
   },

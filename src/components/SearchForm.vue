@@ -1,13 +1,13 @@
 <template>
 <div>
-     <div class="search-container flex w-full justify-center lg:p-8 p-4 bg-gray-400 fixed z-20">
-          <p class="lg:text-4xl text-3xl mr-4 pb-2 ">Search <span class="font-bold">{{q}}</span> gifs</p>
+     <div class="search-container items-center flex w-full justify-center lg:p-4 p-4 bg-gray-400 fixed z-20">
+          <p class="lg:text-3xl text-3xl mr-4 pb-2 ">Search <router-link :to="`/search/${q}`" class="font-bold">{{q}}</router-link> gifs</p>
       <section class="flex">
         <form action="" class="flex"  @submit.prevent="search">
-        <input type="text" v-model="q" class=" outline-none lg:w-full w-3/4 lg:mr-4 mr-2 p-2" placeholder="Search gifs">
+        <input type="text" v-model="q" class="h-10 outline-none lg:w-full w-3/4 lg:mr-4 mr-2 p-2" placeholder="Search gifs">
         <Btn name="Search" :disabled="disabledSearch" class="mr-2" />
        </form>
-       <Btn name="Load more" :method="search" :disabled="disabledLoad"/>
+       <Btn v-if="results && results.length >= 10" name="Load more" :method="search" :disabled="disabledLoad"/>
       </section>
       
       </div>
@@ -35,6 +35,12 @@ export default {
   components: {
     Gifs,
     Btn
+  },
+  mounted() {
+    if (this.$route.params.id) {
+      this.q = this.$route.params.id;
+      this.search();
+    }
   },
   computed: {
     disabledSearch() {
@@ -66,7 +72,9 @@ export default {
           }
         })
         .then(response => {
-          console.log(this.q);
+          if (this.$route.params.id !== this.q) {
+            this.$router.push({ name: "Home", params: { id: this.q } });
+          }
           this.results = response.data.data;
           console.log(this.results);
         })

@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class=" w-full h-full bg-gray-100">
+  <div id="app" class=" w-full h-full">
     <!-- <div id="nav">
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link>
