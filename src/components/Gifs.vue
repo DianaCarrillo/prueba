@@ -1,13 +1,13 @@
 <template>
   <div class="flex flex-col justify-center items-center pt-40">
-    <section class="gif-container">
-      <div v-for="(gif, gIndex) in results" :key="gIndex">
+    <section :class="{'gif-container': !gifsToShow.length}">
+      <div v-for="(gif, gIndex) in result" :key="gIndex">
         <Gif
           :url="gif.images.fixed_height.url"
           :modal="gif.images.original.url"
         />
       </div>
-      <p v-if=" results && !results.length">No hay resultados de {{query}}</p>
+      <p class="" v-if="!gifsToShow">No hay resultados de <span class="font-bold">{{query}}</span></p>
     </section>
   </div>
 </template>
@@ -20,7 +20,7 @@ export default {
     Gif
   },
   props: {
-    results: {
+    result: {
       type: Array,
       default: []
     },
@@ -32,7 +32,7 @@ export default {
       type: Number,
       default: 0
     }
-  },
+  }
 };
 </script>
 

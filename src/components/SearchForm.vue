@@ -5,7 +5,7 @@
     >
       <p class="lg:text-3xl text-3xl mr-4 pb-2">
         Search
-        <router-link :to="`/search/${q}`" class="font-bold">{{q}}</router-link>gifs
+        <router-link :to="`/search/${q}`" class="font-bold">{{q}}</router-link> gifs
       </p>
       <section class="flex">
         <form action class="flex" @submit.prevent="search">
@@ -20,7 +20,7 @@
         <Button name="Load more" :method="loadMore" :disabled="disabledLoad" />
       </section>
     </div>
-    <Gifs :results="results" :gifsToShow="gifsToShow" :query="q" />
+    <Gifs :result="gifs" :gifsToShow="gifsToShow" :query="q" />
   </div>
 </template>
 
@@ -35,6 +35,7 @@ export default {
     return {
       q: "",
       results: [],
+      gifs: [],
       disabledMoreBtn: false,
       disabledSearchBtn: false,
       gifsToShow: 10
@@ -75,7 +76,7 @@ export default {
   },
   methods: {
     loadMore() {
-      return (this.gifsToShow += 10);
+      return (this.gifs = this.results.slice(0, (this.gifsToShow += 10)));
     },
     async search() {
       await axios
@@ -93,8 +94,9 @@ export default {
           this.results = response.data.data;
 
           const { pagination } = response.data;
+          // saco pagination, lo convierto en variable y puedo acceder a sus valores
           this.gifsToShow = pagination.count < 10 ? pagination.count : 10;
-        
+          this.gifs = this.results.slice(0, this.gifsToShow);
         })
         .catch(function(error) {
           console.log(error);
