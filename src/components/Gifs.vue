@@ -1,12 +1,15 @@
 <template>
-      <div class=" flex flex-col justify-center items-center pt-40 " >
-          <section class="gif-container" >
-              <div v-if="results" v-for="index in gifs" :key="index">
-                <Gif :url="results[index].images.fixed_height.url" :modal="results[index].images.original.url" /> 
-              </div>
-                <p v-if=" results && !results.length" >No hay resultados de {{query}}</p>
-            </section>
-        </div>
+  <div class="flex flex-col justify-center items-center pt-40">
+    <section class="gif-container">
+      <div v-for="(gif, gIndex) in results" :key="gIndex">
+        <Gif
+          :url="gif.images.fixed_height.url"
+          :modal="gif.images.original.url"
+        />
+      </div>
+      <p v-if=" results && !results.length">No hay resultados de {{query}}</p>
+    </section>
+  </div>
 </template>
 
 <script>
@@ -30,14 +33,6 @@ export default {
       default: 0
     }
   },
-  computed: {
-    gifs() {
-      if (this.results && this.results.length < 100) {
-        return this.results;
-      }
-      return this.gifsToShow;
-    }
-  }
 };
 </script>
 

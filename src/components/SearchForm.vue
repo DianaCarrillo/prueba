@@ -1,19 +1,27 @@
 <template>
-<div>
-     <div class="search-container items-center flex w-full justify-center lg:p-4 p-4 bg-gray-400 fixed z-20">
-          <p class="lg:text-3xl text-3xl mr-4 pb-2 ">Search <router-link :to="`/search/${q}`" class="font-bold">{{q}}</router-link> gifs</p>
+  <div>
+    <div
+      class="search-container items-center flex w-full justify-center lg:p-4 p-4 bg-gray-400 fixed z-20"
+    >
+      <p class="lg:text-3xl text-3xl mr-4 pb-2">
+        Search
+        <router-link :to="`/search/${q}`" class="font-bold">{{q}}</router-link>gifs
+      </p>
       <section class="flex">
-        <form action="" class="flex" @submit.prevent="search">
-        <input type="text" v-model="q" class="h-10 outline-none lg:w-full w-3/4 lg:mr-4 mr-2 p-2" placeholder="Search gifs">
-        <Button name="Search" :disabled="disabledSearch" class="mr-2" />
-       </form>
-       <Button name="Load more" :method="loadMore" :disabled="disabledLoad"/>
+        <form action class="flex" @submit.prevent="search">
+          <input
+            type="text"
+            v-model="q"
+            class="h-10 outline-none lg:w-full w-3/4 lg:mr-4 mr-2 p-2"
+            placeholder="Search gifs"
+          />
+          <Button name="Search" :disabled="disabledSearch" class="mr-2" />
+        </form>
+        <Button name="Load more" :method="loadMore" :disabled="disabledLoad" />
       </section>
-      
-      </div>
-    <Gifs :results="results" :gifsToShow="gifsToShow" :query="q"/> 
-</div>
-
+    </div>
+    <Gifs :results="results" :gifsToShow="gifsToShow" :query="q" />
+  </div>
 </template>
 
 <script>
@@ -26,7 +34,7 @@ export default {
   data: function() {
     return {
       q: "",
-      results: null,
+      results: [],
       disabledMoreBtn: false,
       disabledSearchBtn: false,
       gifsToShow: 10
@@ -83,6 +91,10 @@ export default {
             this.$router.push({ name: "Home", params: { id: this.q } });
           }
           this.results = response.data.data;
+
+          const { pagination } = response.data;
+          this.gifsToShow = pagination.count < 10 ? pagination.count : 10;
+        
         })
         .catch(function(error) {
           console.log(error);
