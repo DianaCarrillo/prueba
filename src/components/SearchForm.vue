@@ -3,21 +3,21 @@
      <div class="search-container items-center flex w-full justify-center lg:p-4 p-4 bg-gray-400 fixed z-20">
           <p class="lg:text-3xl text-3xl mr-4 pb-2 ">Search <router-link :to="`/search/${q}`" class="font-bold">{{q}}</router-link> gifs</p>
       <section class="flex">
-        <form action="" class="flex"  @submit.prevent="search">
+        <form action="" class="flex" @submit.prevent="search">
         <input type="text" v-model="q" class="h-10 outline-none lg:w-full w-3/4 lg:mr-4 mr-2 p-2" placeholder="Search gifs">
-        <Btn name="Search" :disabled="disabledSearch" class="mr-2" />
+        <Button name="Search" :disabled="disabledSearch" class="mr-2" />
        </form>
-       <Btn v-if="results && results.length >= 10" name="Load more" :method="search" :disabled="disabledLoad"/>
+       <Button name="Load more" :method="loadMore" :disabled="disabledLoad"/>
       </section>
       
       </div>
-    <Gifs :results="results" :query="q"/> 
+    <Gifs :results="results" :gifsToShow="gifsToShow" :query="q"/> 
 </div>
 
 </template>
 
 <script>
-import Btn from "./Btn.vue";
+import Button from "./Button.vue";
 import Gifs from "./Gifs.vue";
 import axios from "axios";
 const apiKey = "7oqbWiAr4RXO48oFiX2amhSTciHjnjY3";
@@ -27,16 +27,16 @@ export default {
     return {
       q: "",
       results: null,
-      limit: 0,
       disabledMoreBtn: false,
-      disabledSearchBtn: false
+      disabledSearchBtn: false,
+      gifsToShow: 10
     };
   },
   components: {
     Gifs,
-    Btn
+    Button
   },
-  mounted() {
+  created() {
     if (this.$route.params.id) {
       this.q = this.$route.params.id;
       this.search();
@@ -49,7 +49,11 @@ export default {
       }
     },
     disabledLoad() {
-      if (this.limit >= 100 || !this.q) {
+      if (
+        this.gifsToShow >= 100 ||
+        !this.q ||
+        (this.results && this.results.length < 10)
+      ) {
         return (this.disabledMoreBtn = true);
       }
     }
@@ -57,18 +61,21 @@ export default {
   watch: {
     q(old, newVal) {
       if (old !== newVal) {
-        this.limit = 0;
+        this.gifsToShow = 10;
       }
     }
   },
   methods: {
-    search() {
-      axios
+    loadMore() {
+      return (this.gifsToShow += 10);
+    },
+    async search() {
+      await axios
         .get(url, {
           params: {
             q: this.q.split(" ").join("+"),
             apiKey: apiKey,
-            limit: (this.limit += 10)
+            limit: 100
           }
         })
         .then(response => {
@@ -76,7 +83,6 @@ export default {
             this.$router.push({ name: "Home", params: { id: this.q } });
           }
           this.results = response.data.data;
-          console.log(this.results);
         })
         .catch(function(error) {
           console.log(error);

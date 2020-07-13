@@ -13,12 +13,6 @@
 <script>
 export default {
   name: "Modal"
-  //   props: {
-  //     result: {
-  //       type: Array,
-  //       default: []
-  //     }
-  //   }
 };
 </script>
 

@@ -1,13 +1,11 @@
 <template>
       <div class=" flex flex-col justify-center items-center pt-40 " >
-          <div class="">
           <section class="gif-container" >
-              <div v-for="result in results" :key="result.id">
-                <Gif :result="result">
-                </Gif>
+              <div v-if="results" v-for="index in gifs" :key="index">
+                <Gif :url="results[index].images.fixed_height.url" :modal="results[index].images.original.url" /> 
               </div>
+                <p v-if=" results && !results.length" >No hay resultados de {{query}}</p>
             </section>
-          </div>           
         </div>
 </template>
 
@@ -18,11 +16,6 @@ export default {
   components: {
     Gif
   },
-  // data() {
-  //   return {
-  //     show: false
-  //   };
-  // },
   props: {
     results: {
       type: Array,
@@ -31,6 +24,18 @@ export default {
     query: {
       type: String,
       default: null
+    },
+    gifsToShow: {
+      type: Number,
+      default: 0
+    }
+  },
+  computed: {
+    gifs() {
+      if (this.results && this.results.length < 100) {
+        return this.results;
+      }
+      return this.gifsToShow;
     }
   }
 };
@@ -38,30 +43,21 @@ export default {
 
 <style scoped>
 .gif-container {
-  /* display: flex; */
-  /* overflow: hidden; */
   display: grid;
-
-  /* grid-template-columns: 1fr 1fr 1fr 1fr 1fr; */
 }
 
 @media screen and (min-width: 480px) {
   .gif-container {
-    /* border: 1px solid purple; */
     grid-template-columns: 1fr 1fr 1fr;
   }
 }
 @media screen and (min-width: 678px) {
   .gif-container {
-    /* border: 1px solid purple; */
     grid-template-columns: 1fr 1fr;
   }
 }
 @media screen and (min-width: 1024px) {
   .gif-container {
-    /* display: flex; */
-    /* overflow: hidden; */
-    /* display: grid; */
     grid-template-columns: 1fr 1fr 1fr;
   }
 }
