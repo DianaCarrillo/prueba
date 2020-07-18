@@ -11,7 +11,8 @@
         <form action class="flex" @submit.prevent="search">
           <input
             type="text"
-            v-model="q"
+            :value="q"
+            @input="updateQuery"
             class="h-10 outline-none lg:w-full w-3/4 lg:mr-4 mr-2 p-2"
             placeholder="Search gifs"
           />
@@ -20,38 +21,30 @@
         <Button name="Load more" :method="loadMore" :disabled="disabledLoad" />
       </section>
     </div>
-    <Gifs :result="gifs" :gifsToShow="gifsToShow" :query="q" />
+    <Gifs  />
   </div>
 </template>
 
 <script>
 import Button from "./Button.vue";
 import Gifs from "./Gifs.vue";
-import axios from "axios";
-const apiKey = "7oqbWiAr4RXO48oFiX2amhSTciHjnjY3";
-const url = "http://api.giphy.com/v1/gifs/search";
+import { mapState } from "vuex";
 export default {
   data: function() {
-    return {
-      q: "",
-      results: [],
-      gifs: [],
-      disabledMoreBtn: false,
-      disabledSearchBtn: false,
-      gifsToShow: 10
-    };
+    return {};
   },
   components: {
     Gifs,
     Button
   },
   created() {
-    if (this.$route.params.id) {
+    if (this.$route.params.id && this.q) {
       this.q = this.$route.params.id;
       this.search();
     }
   },
   computed: {
+    ...mapState(["q", "giftsToShow"]),
     disabledSearch() {
       if (!this.q) {
         return (this.disabledSearchBtn = true);
@@ -67,40 +60,15 @@ export default {
       }
     }
   },
-  watch: {
-    q(old, newVal) {
-      if (old !== newVal) {
-        this.gifsToShow = 10;
-      }
-    }
-  },
   methods: {
-    loadMore() {
-      return (this.gifs = this.results.slice(0, (this.gifsToShow += 10)));
+    search() {
+      this.$store.dispatch("search");
     },
-    async search() {
-      await axios
-        .get(url, {
-          params: {
-            q: this.q.split(" ").join("+"),
-            apiKey: apiKey,
-            limit: 100
-          }
-        })
-        .then(response => {
-          if (this.$route.params.id !== this.q) {
-            this.$router.push({ name: "Home", params: { id: this.q } });
-          }
-          this.results = response.data.data;
-
-          const { pagination } = response.data;
-          // saco pagination, lo convierto en variable y puedo acceder a sus valores
-          this.gifsToShow = pagination.count < 10 ? pagination.count : 10;
-          this.gifs = this.results.slice(0, this.gifsToShow);
-        })
-        .catch(function(error) {
-          console.log(error);
-        });
+    loadMore() {
+      this.$store.commit("loadMore");
+    },
+    updateQuery(e) {
+      this.$store.commit("updateQuery", e.target.value);
     }
   }
 };

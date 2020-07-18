@@ -1,37 +1,28 @@
 <template>
   <div class="flex flex-col justify-center items-center pt-40">
     <section :class="{'gif-container': !gifsToShow.length}">
-      <div v-for="(gif, gIndex) in result" :key="gIndex">
+      <div v-for="(gif, gIndex) in gifs" :key="gIndex">
         <Gif
           :url="gif.images.fixed_height.url"
           :modal="gif.images.original.url"
         />
       </div>
-      <p class="" v-if="!gifsToShow">No hay resultados de <span class="font-bold">{{query}}</span></p>
+      <p class="" v-if="!gifsToShow">No hay resultados de <span class="font-bold">{{q}}</span></p>
     </section>
   </div>
 </template>
 
 <script>
 import Gif from "./Gif";
+import { mapState } from "vuex";
+
 export default {
   name: "Gifs",
   components: {
     Gif
   },
-  props: {
-    result: {
-      type: Array,
-      default: []
-    },
-    query: {
-      type: String,
-      default: null
-    },
-    gifsToShow: {
-      type: Number,
-      default: 0
-    }
+  computed: {
+    ...mapState(["q", "gifsToShow", "gifs"])
   }
 };
 </script>
