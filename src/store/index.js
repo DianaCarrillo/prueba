@@ -29,7 +29,7 @@ export const store = new Vuex.Store({
   },
   actions: {
  async search({commit, state}) {
-    const apiKey = "7oqbWiAr4RXO48oFiX2amhSTciHjnjY3";
+    const apiKey = process.env.VUE_APP_API_KEY;
     const url = "https://api.giphy.com/v1/gifs/search";
     try{
       const response = await axios
